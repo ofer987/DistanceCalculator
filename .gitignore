@@ -1,0 +1,13 @@
+# Ignore dotnet core build
+**/bin/
+**/obj/
+
+# Ignore Visual Studio Code
+.vscode
+
+# Ignore local SQL files
+queries
+inserts
+data_dumps
+
+yarn-error.log
