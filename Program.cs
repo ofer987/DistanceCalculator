@@ -19,7 +19,11 @@ using System.Text.Json;
 //
 // Console.WriteLine(result);
 
-var id = args[0] ?? "7";
+var id = "7";
+if (args.Length >= 1)
+{
+    id = args[0];
+}
 var uri = $"https://www.ttc.ca/ttcapi/routedetail/get?id={id}";
 
 using var client = new HttpClient();
