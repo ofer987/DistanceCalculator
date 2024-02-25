@@ -8,10 +8,5 @@ public abstract class Line
 
     public string FullName => $"{Id} - {Name}";
 
-    public IList<Stop> Stops { get; private set; }
-
-    protected Line()
-    {
-        Stops = new List<Stop>();
-    }
+    public IList<Stop> Stops { get; } = new List<Stop>();
 }

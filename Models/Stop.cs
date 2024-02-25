@@ -34,12 +34,6 @@ public class Stop
         stringBuilder.AppendLine($"{nameof(Latitude)} = {Latitude}");
         stringBuilder.AppendLine($"{nameof(Longitude)} = {Longitude}");
 
-        // stringBuilder.AppendLine($"{nameof(Times)} =");
-        // foreach (var time in Times)
-        // {
-        //     stringBuilder.AppendLine($"{time}");
-        // }
-
         return stringBuilder.ToString();
     }
 }

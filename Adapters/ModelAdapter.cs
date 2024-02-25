@@ -6,9 +6,6 @@ public static class ModelAdapter
 
     public static int[] SubwayLineIds = new[] { 1, 2, 3, 4 };
 
-    // public IList<Models.SubwayLine> Subways => new List<Models.SubwayLine>();
-    // public IList<Models.BusLine> Buses => new List<Models.BusLine>();
-
     public static Models.Agency CreateAgency()
     {
         return new Models.Agency
