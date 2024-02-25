@@ -6,5 +6,5 @@ public abstract class Line
 
     public required string Name { get; init; }
 
-    public required IList<Stop> Stops { get; init; }
+    public IList<Stop> Stops => new List<Stop>();
 }

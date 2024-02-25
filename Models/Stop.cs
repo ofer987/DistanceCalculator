@@ -14,7 +14,7 @@ public class Stop
 
     public required float Longitude { get; init; }
 
-    public required IList<string> Times { get; init; } = new string[0];
+    // public required IList<string> Times { get; init; } = new string[0];
 
     public double Distance { get; private set; }
 
@@ -32,11 +32,11 @@ public class Stop
         stringBuilder.AppendLine($"{nameof(Latitude)} = {Latitude}");
         stringBuilder.AppendLine($"{nameof(Longitude)} = {Longitude}");
 
-        stringBuilder.AppendLine($"{nameof(Times)} =");
-        foreach (var time in Times)
-        {
-            stringBuilder.AppendLine($"{time}");
-        }
+        // stringBuilder.AppendLine($"{nameof(Times)} =");
+        // foreach (var time in Times)
+        // {
+        //     stringBuilder.AppendLine($"{time}");
+        // }
 
         return stringBuilder.ToString();
     }

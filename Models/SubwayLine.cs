@@ -1,5 +1,5 @@
 namespace DistanceCalculator.Models;
 
-public class SubwayLine
+public class SubwayLine : Line
 {
 }
