@@ -21,7 +21,7 @@ public static class ModelAdapter
         {
             var busLine = new Models.BusLine
             {
-                Id = branch.RouteId.ShortName,
+                Id = route.Information.ShortName,
                 Name = branch.Direction.BranchName,
             };
 
