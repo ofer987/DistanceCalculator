@@ -1,9 +1,9 @@
-﻿// using System.Net;
+// using System.Net;
 // using System.Net.Http.Headers;
 //
 // using System.Text.Json;
 
-using System.Linq;
+// using System.Linq;
 
 // using DistanceCalculator.RestApi;
 // namespace DistanceCalculator;
@@ -32,9 +32,9 @@ var agency = DistanceCalculator.Adapters.ModelAdapter.CreateAgency();
 
 foreach (var id in routeIds.Take(10))
 {
-    var branch = await DistanceCalculator.RestApi.Ttc.GetBranch(id);
+    var route = await DistanceCalculator.RestApi.Ttc.GetRoute(id);
 
-    var lines = DistanceCalculator.Adapters.ModelAdapter.CreateLines(agency, branch, userLongitude, userLatitude);
+    var lines = DistanceCalculator.Adapters.ModelAdapter.CreateLines(agency, route, userLongitude, userLatitude);
     foreach (var line in lines)
     {
         agency.Buses.Add(line);

@@ -9,18 +9,18 @@ public static class Ttc
 {
     // Get Bus Lines
     // https://www.ttc.ca/ttcapi/routedetail/listroutes
-    public static async Task<IEnumerable<RouteId>> GetRoutes()
+    public static async Task<IEnumerable<RouteInformation>> GetRoutes()
     {
         var uri = "https://www.ttc.ca/ttcapi/routedetail/listroutes";
 
         return await GetEnumerableJson(uri);
     }
 
-    public static async Task<Branch> GetBranch(int id)
+    public static async Task<Route> GetRoute(int id)
     {
         var uri = $"https://www.ttc.ca/ttcapi/routedetail/get?id={id}";
 
-        return await GetJson<Branch>(uri);
+        return await GetJson<Route>(uri);
     }
 
     private static async Task<T> GetJson<T>(string uri) where T : class
@@ -63,7 +63,7 @@ public static class Ttc
         }
     }
 
-    private static async Task<IEnumerable<RouteId>> GetEnumerableJson(string uri)
+    private static async Task<IEnumerable<RouteInformation>> GetEnumerableJson(string uri)
     {
         try
         {
@@ -86,10 +86,10 @@ public static class Ttc
             //     throw new HttpRequestException("Received an empty response");
             // }
 
-            var result = JsonSerializer.Deserialize<IEnumerable<RouteId>>(body);
+            var result = JsonSerializer.Deserialize<IEnumerable<RouteInformation>>(body);
             if (result is null)
             {
-                throw new HttpRequestException($"Failed to deserialize to type {typeof(IEnumerable<RouteId>)}");
+                throw new HttpRequestException($"Failed to deserialize to type {typeof(IEnumerable<RouteInformation>)}");
             }
 
             return result;

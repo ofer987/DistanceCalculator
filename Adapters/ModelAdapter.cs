@@ -15,17 +15,17 @@ public static class ModelAdapter
         };
     }
 
-    public static IEnumerable<Models.Line> CreateLines(Models.Agency agency, Branch branch, float latitude, float longitude)
+    public static IEnumerable<Models.Line> CreateLines(Models.Agency agency, Route route, float latitude, float longitude)
     {
-        foreach (var route in branch.Routes)
+        foreach (var branch in route.Branches)
         {
             var busLine = new Models.BusLine
             {
                 Id = branch.RouteId.ShortName,
-                Name = route.Direction.BranchName,
+                Name = branch.Direction.BranchName,
             };
 
-            foreach (var stop in route.Stops)
+            foreach (var stop in branch.Stops)
             {
                 var busStop = new Models.Stop(stop.Latitude, stop.Longitude, latitude, longitude)
                 {
