@@ -25,81 +25,60 @@ public static class Ttc
 
     private static async Task<T> GetJson<T>(string uri) where T : class
     {
-        try
+        using var client = new HttpClient();
+        using var request = new HttpRequestMessage(HttpMethod.Get, uri);
+        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        Console.WriteLine(uri);
+        using var response = await client.SendAsync(request);
+        if (response.StatusCode != HttpStatusCode.OK)
         {
-            using var client = new HttpClient();
-            using var request = new HttpRequestMessage(HttpMethod.Get, uri);
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            Console.WriteLine(uri);
-            using var response = await client.SendAsync(request);
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new HttpRequestException($"Received {response.StatusCode} instead of {HttpStatusCode.OK}");
-            }
-
-
-            var body = await response.Content.ReadAsStringAsync() ?? string.Empty;
-            //
-            // if (string.IsNullOrWhiteSpace(result) || result is null)
-            // {
-            //     throw new HttpRequestException("Received an empty response");
-            // }
-
-            var result = JsonSerializer.Deserialize<T>(body);
-            if (result is null)
-            {
-                throw new HttpRequestException($"Failed to deserialize to type {typeof(T)}");
-            }
-
-            return result;
+            throw new HttpRequestException($"Received {response.StatusCode} instead of {HttpStatusCode.OK}");
         }
-        catch (HttpRequestException exception)
+
+        var body = await response.Content.ReadAsStringAsync() ?? string.Empty;
+        //
+        // if (string.IsNullOrWhiteSpace(result) || result is null)
+        // {
+        //     throw new HttpRequestException("Received an empty response");
+        // }
+
+        var result = JsonSerializer.Deserialize<T>(body);
+        if (result is null)
         {
-            Console.WriteLine($"Failed to access {uri}");
-            Console.WriteLine(exception);
-
-            throw;
+            throw new HttpRequestException($"Failed to deserialize to type {typeof(T)}");
         }
+
+        return result;
     }
 
     private static async Task<IEnumerable<RouteInformation>> GetEnumerableJson(string uri)
     {
-        try
+        using var client = new HttpClient();
+        using var request = new HttpRequestMessage(HttpMethod.Get, uri);
+        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        // Console.WriteLine(uri);
+        using var response = await client.SendAsync(request);
+        if (response.StatusCode != HttpStatusCode.OK)
         {
-            using var client = new HttpClient();
-            using var request = new HttpRequestMessage(HttpMethod.Get, uri);
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            // Console.WriteLine(uri);
-            using var response = await client.SendAsync(request);
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new HttpRequestException($"Received {response.StatusCode} instead of {HttpStatusCode.OK}");
-            }
-
-
-            var body = await response.Content.ReadAsStringAsync() ?? string.Empty;
-            //
-            // if (string.IsNullOrWhiteSpace(result) || result is null)
-            // {
-            //     throw new HttpRequestException("Received an empty response");
-            // }
-
-            var result = JsonSerializer.Deserialize<IEnumerable<RouteInformation>>(body);
-            if (result is null)
-            {
-                throw new HttpRequestException($"Failed to deserialize to type {typeof(IEnumerable<RouteInformation>)}");
-            }
-
-            return result;
+            throw new HttpRequestException($"Received {response.StatusCode} instead of {HttpStatusCode.OK}");
         }
-        catch (HttpRequestException exception)
+
+
+        var body = await response.Content.ReadAsStringAsync() ?? string.Empty;
+        //
+        // if (string.IsNullOrWhiteSpace(result) || result is null)
+        // {
+        //     throw new HttpRequestException("Received an empty response");
+        // }
+
+        var result = JsonSerializer.Deserialize<IEnumerable<RouteInformation>>(body);
+        if (result is null)
         {
-            Console.WriteLine($"Failed to access {uri}");
-            Console.WriteLine(exception);
-
-            throw;
+            throw new HttpRequestException($"Failed to deserialize to type {typeof(IEnumerable<RouteInformation>)}");
         }
+
+        return result;
     }
 }

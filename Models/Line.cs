@@ -6,6 +6,8 @@ public abstract class Line
 
     public required string Name { get; init; }
 
+    public string FullName => $"{Id} - {Name}";
+
     public IList<Stop> Stops { get; private set; }
 
     protected Line()
