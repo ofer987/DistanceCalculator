@@ -6,5 +6,10 @@ public abstract class Line
 
     public required string Name { get; init; }
 
-    public IList<Stop> Stops => new List<Stop>();
+    public IList<Stop> Stops { get; private set; }
+
+    protected Line()
+    {
+        Stops = new List<Stop>();
+    }
 }

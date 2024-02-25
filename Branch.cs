@@ -4,8 +4,12 @@ using System.Text.Json.Serialization;
 public record Branch
 {
     [JsonRequired]
+    [JsonPropertyName("route")]
+    public required RouteId RouteId { get; init; }
+
+    [JsonRequired]
     [JsonPropertyName("routeBranchesWithStops")]
-    public required IList<Route> Routes { get; init; } = new Route[0];
+    public required IList<Route> Routes { get; init; } = new List<Route>();
 
     public override string ToString()
     {

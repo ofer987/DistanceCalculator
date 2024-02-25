@@ -14,10 +14,10 @@ using System.Linq;
 // https://www.ttc.ca/ttcapi/routedetail/listroutes
 
 // using DistanceCalculator.RestApi;
+// 43.6587161,-79.4461468
 
-
-var userLongitude = 43.3434f;
-var userLatitude = -73.45354f;
+var userLongitude = 43.6587161f;
+var userLatitude = -79.4461468f;
 
 var routeIds = new List<int>();
 foreach (var route in (await DistanceCalculator.RestApi.Ttc.GetRoutes()))
@@ -30,7 +30,7 @@ foreach (var route in (await DistanceCalculator.RestApi.Ttc.GetRoutes()))
 
 var agency = DistanceCalculator.Adapters.ModelAdapter.CreateAgency();
 
-foreach (var id in routeIds)
+foreach (var id in routeIds.Take(10))
 {
     var branch = await DistanceCalculator.RestApi.Ttc.GetBranch(id);
 
@@ -40,6 +40,14 @@ foreach (var id in routeIds)
         agency.Buses.Add(line);
     }
 }
+
+var closestStops = agency.Buses.SelectMany(bus => bus.Stops)
+    .Where(stop => stop.Distance <= 5000d)
+    .OrderBy(stop => stop.Distance)
+    .GroupBy(stop => stop.Line.Id)
+    .Select(stop => stop.First());
+
+Console.WriteLine(agency);
 
 // var id = "7";
 // if (args.Length >= 1)

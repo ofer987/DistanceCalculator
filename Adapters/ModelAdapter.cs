@@ -21,18 +21,17 @@ public static class ModelAdapter
         {
             var busLine = new Models.BusLine
             {
-                Id = route.Id.ToString(),
+                Id = branch.RouteId.ShortName,
                 Name = route.Direction.BranchName,
             };
 
             foreach (var stop in route.Stops)
             {
-                var busStop = new Models.Stop(latitude, longitude)
+                var busStop = new Models.Stop(stop.Latitude, stop.Longitude, latitude, longitude)
                 {
+                    Line = busLine,
                     Id = stop.Id,
-                    Name = stop.Name,
-                    Latitude = stop.Latitude,
-                    Longitude = stop.Longitude
+                    Name = stop.Name
                 };
 
                 busLine.Stops.Add(busStop);

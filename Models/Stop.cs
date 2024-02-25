@@ -6,20 +6,22 @@ namespace DistanceCalculator.Models;
 
 public class Stop
 {
+    public required Line Line { get; init; }
+
     public required int Id { get; init; }
 
     public required string Name { get; init; }
 
-    public required float Latitude { get; init; }
+    public float Latitude { get; private set; }
 
-    public required float Longitude { get; init; }
-
-    // public required IList<string> Times { get; init; } = new string[0];
+    public float Longitude { get; private set; }
 
     public double Distance { get; private set; }
 
-    public Stop(float userLatitude, float userLongitude)
+    public Stop(float latitude, float longitude, float userLatitude, float userLongitude)
     {
+        Latitude = latitude;
+        Longitude = longitude;
         Distance = GeoCalculator.GetDistance(userLatitude, userLongitude, Latitude, Longitude, 1, DistanceUnit.Meters);
     }
 

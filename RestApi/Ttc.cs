@@ -31,7 +31,7 @@ public static class Ttc
             using var request = new HttpRequestMessage(HttpMethod.Get, uri);
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            // Console.WriteLine(uri);
+            Console.WriteLine(uri);
             using var response = await client.SendAsync(request);
             if (response.StatusCode != HttpStatusCode.OK)
             {
