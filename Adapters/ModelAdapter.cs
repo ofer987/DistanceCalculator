@@ -35,12 +35,14 @@ public static class ModelAdapter
                         Name = branch.Direction.BranchName,
                     };
                     break;
+                case 700:
                 default:
                     line = new Models.BusLine
                     {
                         Id = route.Information.ShortName,
                         Name = branch.Direction.BranchName,
                     };
+                    break;
             }
 
             foreach (var stop in branch.Stops)

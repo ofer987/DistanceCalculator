@@ -3,32 +3,10 @@ var userLatitude = -79.4461468f;
 
 var agency = DistanceCalculator.Adapters.ModelAdapter.CreateAgency();
 
-foreach (var id in DistanceCalculator.Adapters.ModelAdapter.SubwayLineIds)
-{
-    Route route;
-    try
-    {
-        route = await DistanceCalculator.RestApi.Ttc.GetRoute(id);
-    }
-    catch (HttpRequestException exception)
-    {
-        Console.WriteLine($"Failed to get a route for {id}");
-        Console.WriteLine(exception);
-
-        continue;
-    }
-
-    var lines = DistanceCalculator.Adapters.ModelAdapter.CreateSubwayLines(agency, route, userLongitude, userLatitude);
-    foreach (var line in lines)
-    {
-        agency.Subways.Add(line);
-    }
-}
-
-IEnumerable<RouteInformation> busRoutes;
+IEnumerable<RouteInformation> routes;
 try
 {
-    busRoutes = await DistanceCalculator.RestApi.Ttc.GetRoutes();
+    routes = await DistanceCalculator.RestApi.Ttc.GetRoutes();
 }
 catch (HttpRequestException exception)
 {
@@ -38,20 +16,15 @@ catch (HttpRequestException exception)
     return 1;
 }
 
-var busRouteIds = new List<int>();
-foreach (var route in busRoutes)
+var routeIds = new List<int>();
+foreach (var route in routes)
 {
     if (Int32.TryParse(route.ShortName, out var id))
     {
-        if (DistanceCalculator.Adapters.ModelAdapter.SubwayLineIds.Contains(id))
-        {
-            continue;
-        }
-
-        busRouteIds.Add(id);
+        routeIds.Add(id);
     }
 }
-foreach (var id in busRouteIds.Take(10))
+foreach (var id in routeIds.Take(10))
 {
     Route route;
     try
@@ -66,10 +39,10 @@ foreach (var id in busRouteIds.Take(10))
         continue;
     }
 
-    var lines = DistanceCalculator.Adapters.ModelAdapter.CreateBusLines(agency, route, userLongitude, userLatitude);
+    var lines = DistanceCalculator.Adapters.ModelAdapter.CreateLines(agency, route, userLongitude, userLatitude);
     foreach (var line in lines)
     {
-        agency.Buses.Add(line);
+        agency.Lines.Add(line);
     }
 }
 

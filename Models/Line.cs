@@ -4,6 +4,8 @@ public enum LineTypes { Subway = 0, Bus, Streetcar };
 
 public abstract class Line
 {
+    public abstract LineTypes Type { get; }
+
     public required string Id { get; init; }
 
     public required string Name { get; init; }
