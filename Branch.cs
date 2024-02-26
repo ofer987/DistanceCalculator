@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 
-public record Branch
+public class Branch : Serializable
 {
     [JsonRequired]
     [JsonPropertyName("id")]

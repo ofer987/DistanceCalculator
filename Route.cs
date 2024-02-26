@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 
-public record Route
+public class Route : Serializable
 {
     [JsonRequired]
     [JsonPropertyName("route")]

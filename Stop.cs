@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 
-public record Stop
+public class Stop : Serializable
 {
     [JsonRequired]
     [JsonPropertyName("id")]
@@ -23,7 +23,8 @@ public record Stop
     [JsonPropertyName("routeStopTimes")]
     public required IList<string> Times { get; init; } = new string[0];
 
-    public override string ToString() {
+    public override string ToString()
+    {
         var stringBuilder = new StringBuilder();
 
         stringBuilder.AppendLine($"{nameof(Id)} = {Id}");

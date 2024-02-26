@@ -1,6 +1,7 @@
+using System.Text;
 using System.Text.Json.Serialization;
 
-public record Direction
+public class Direction : Serializable
 {
     [JsonRequired]
     [JsonPropertyName("branchName")]
@@ -10,7 +11,12 @@ public record Direction
     [JsonPropertyName("headsign")]
     public string HeadSign { get; init; } = string.Empty;
 
-    public override string ToString() {
-        return $"{nameof(BranchName)} = {BranchName}";
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine($"{nameof(BranchName)} = {BranchName}");
+        sb.AppendLine($"{nameof(HeadSign)} = {HeadSign}");
+
+        return sb.ToString();
     }
 }

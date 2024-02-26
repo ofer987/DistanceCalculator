@@ -13,7 +13,7 @@ public static class Ttc
     {
         var uri = "https://www.ttc.ca/ttcapi/routedetail/listroutes";
 
-        return await GetEnumerableJson(uri);
+        return await GetEnumerableJson<RouteInformation>(uri);
     }
 
     public static async Task<Route> GetRoute(int id)
@@ -23,7 +23,7 @@ public static class Ttc
         return await GetJson<Route>(uri);
     }
 
-    private static async Task<T> GetJson<T>(string uri) where T : class
+    private static async Task<T> GetJson<T>(string uri) where T : Serializable
     {
         using var client = new HttpClient();
         using var request = new HttpRequestMessage(HttpMethod.Get, uri);
@@ -37,11 +37,6 @@ public static class Ttc
         }
 
         var body = await response.Content.ReadAsStringAsync() ?? string.Empty;
-        //
-        // if (string.IsNullOrWhiteSpace(result) || result is null)
-        // {
-        //     throw new HttpRequestException("Received an empty response");
-        // }
 
         var result = JsonSerializer.Deserialize<T>(body);
         if (result is null)
@@ -52,13 +47,12 @@ public static class Ttc
         return result;
     }
 
-    private static async Task<IEnumerable<RouteInformation>> GetEnumerableJson(string uri)
+    private static async Task<IEnumerable<T>> GetEnumerableJson<T>(string uri) where T : Serializable
     {
         using var client = new HttpClient();
         using var request = new HttpRequestMessage(HttpMethod.Get, uri);
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-        // Console.WriteLine(uri);
         using var response = await client.SendAsync(request);
         if (response.StatusCode != HttpStatusCode.OK)
         {
@@ -67,13 +61,8 @@ public static class Ttc
 
 
         var body = await response.Content.ReadAsStringAsync() ?? string.Empty;
-        //
-        // if (string.IsNullOrWhiteSpace(result) || result is null)
-        // {
-        //     throw new HttpRequestException("Received an empty response");
-        // }
 
-        var result = JsonSerializer.Deserialize<IEnumerable<RouteInformation>>(body);
+        var result = JsonSerializer.Deserialize<IEnumerable<T>>(body);
         if (result is null)
         {
             throw new HttpRequestException($"Failed to deserialize to type {typeof(IEnumerable<RouteInformation>)}");

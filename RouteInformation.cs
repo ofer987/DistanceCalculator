@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 
-public record RouteInformation
+public class RouteInformation : Serializable
 {
     [JsonRequired]
     [JsonPropertyName("id")]
@@ -10,6 +10,10 @@ public record RouteInformation
     [JsonRequired]
     [JsonPropertyName("shortName")]
     public required String ShortName { get; init; }
+
+    [JsonRequired]
+    [JsonPropertyName("type")]
+    public required int Type { get; init; }
 
     public override string ToString()
     {
