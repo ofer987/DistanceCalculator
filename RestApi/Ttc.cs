@@ -16,6 +16,7 @@ public static class Ttc
         return await GetEnumerableJson<RouteInformation>(uri);
     }
 
+    // https://www.ttc.ca/ttcapi/routedetail/get?id={id}
     public static async Task<Route> GetRoute(int id)
     {
         var uri = $"https://www.ttc.ca/ttcapi/routedetail/get?id={id}";

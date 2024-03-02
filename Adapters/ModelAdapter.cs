@@ -1,5 +1,7 @@
 namespace DistanceCalculator.Adapters;
 
+using DistanceCalculator.Extensions;
+
 public static class ModelAdapter
 {
     public static string TransitAgency = "TTC";
@@ -43,6 +45,11 @@ public static class ModelAdapter
                         Name = branch.Direction.BranchName,
                     };
                     break;
+            }
+
+            if (line.Name.IsEmpty())
+            {
+                continue;
             }
 
             foreach (var stop in branch.Stops)
