@@ -4,7 +4,7 @@ using DistanceCalculator.Extensions;
 
 public static class ModelAdapter
 {
-    public static IEnumerable<Models.Line> CreateLines(Route route, float latitude, float longitude)
+    public static IEnumerable<Models.Line> CreateLines(Route route)
     {
         foreach (var branch in route.Branches)
         {

@@ -56,14 +56,14 @@ public class Program
                 continue;
             }
 
-            var lines = DistanceCalculator.Adapters.ModelAdapter.CreateLines(route, latitude, longitude);
+            var lines = DistanceCalculator.Adapters.ModelAdapter.CreateLines(route);
             foreach (var line in lines)
             {
                 Models.Agency.INSTANCE.Lines.Add(line);
             }
         }
 
-        var nearestStops = agency.GetNearestStops(latitude, longitude);
+        var nearestStops = agency.GetNearestStops(latitude, longitude).ToList();
 
         Console.WriteLine(agency);
 
