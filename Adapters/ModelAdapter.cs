@@ -42,11 +42,13 @@ public static class ModelAdapter
 
             foreach (var stop in branch.Stops)
             {
-                var station = new Models.Stop(stop.Latitude, stop.Longitude, latitude, longitude)
+                var station = new Models.Stop
                 {
                     Line = line,
                     Id = stop.Id,
-                    Name = stop.Name
+                    Name = stop.Name,
+                    Latitude = stop.Latitude,
+                    Longitude = stop.Longitude
                 };
 
                 line.Stops.Add(station);

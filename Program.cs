@@ -8,14 +8,14 @@ public class Program
 {
     public static async Task<int> Main(string[] args)
     {
-        const string LONGITUDE = "LONGITUDE";
         const string LATITUDE = "LATITUDE";
+        const string LONGITUDE = "LONGITUDE";
 
-        const string DEFAULT_LONGITUDE = "43.6587161";
-        const string DEFAULT_LATITUDE = " -79.4461468";
+        const string DEFAULT_LATITUDE = "43.6587161";
+        const string DEFAULT_LONGITUDE = "-79.4461468";
 
-        var longitude = float.Parse(Environment.GetEnvironmentVariable(LONGITUDE) ?? DEFAULT_LONGITUDE);
         var latitude = float.Parse(Environment.GetEnvironmentVariable(LATITUDE) ?? DEFAULT_LATITUDE);
+        var longitude = float.Parse(Environment.GetEnvironmentVariable(LONGITUDE) ?? DEFAULT_LONGITUDE);
 
         Models.Agency.INSTANCE = new DistanceCalculator.Models.TtcAgency();
         var agency = Models.Agency.INSTANCE;
@@ -56,19 +56,14 @@ public class Program
                 continue;
             }
 
-            var lines = DistanceCalculator.Adapters.ModelAdapter.CreateLines(route, longitude, latitude);
+            var lines = DistanceCalculator.Adapters.ModelAdapter.CreateLines(route, latitude, longitude);
             foreach (var line in lines)
             {
                 Models.Agency.INSTANCE.Lines.Add(line);
             }
         }
 
-        var allLines = agency.Lines;
-        var closestStops = allLines.SelectMany(line => line.Stops)
-            .Where(stop => stop.Distance <= 1000d)
-            .OrderBy(stop => stop.Distance)
-            .GroupBy(stop => stop.Line.FullName)
-            .Select(stop => stop.First());
+        var nearestStops = agency.GetNearestStops(latitude, longitude);
 
         Console.WriteLine(agency);
 

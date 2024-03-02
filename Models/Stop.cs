@@ -12,17 +12,13 @@ public class Stop
 
     public required string Name { get; init; }
 
-    public float Latitude { get; private set; }
+    public required float Latitude { get; init; }
 
-    public float Longitude { get; private set; }
+    public required float Longitude { get; init; }
 
-    public double Distance { get; private set; }
-
-    public Stop(float latitude, float longitude, float userLatitude, float userLongitude)
+    public double GetDistance(float latitude, float longitude)
     {
-        Latitude = latitude;
-        Longitude = longitude;
-        Distance = GeoCalculator.GetDistance(userLatitude, userLongitude, Latitude, Longitude, 1, DistanceUnit.Meters);
+        return GeoCalculator.GetDistance(latitude, longitude, Latitude, Longitude, 1, DistanceUnit.Meters);
     }
 
     public override string ToString()

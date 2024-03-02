@@ -18,4 +18,15 @@ public abstract class Agency
     {
         Name = name;
     }
+
+    public IEnumerable<Stop> GetNearestStops(float latitude, float longitude)
+    {
+        return Lines.SelectMany(line => line.Stops)
+            .Select(stop => new { Distance = stop.GetDistance(latitude, longitude), Stop = stop })
+            .Where(record => record.Distance <= 1000d)
+            .OrderBy(record => record.Distance)
+            .Select(record => record.Stop)
+            .GroupBy(stop => stop.Line.FullName)
+            .Select(stop => stop.First());
+    }
 }
