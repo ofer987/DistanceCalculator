@@ -13,9 +13,12 @@ public class Program
 
         const string DEFAULT_LONGITUDE = "43.6587161";
         const string DEFAULT_LATITUDE = " -79.4461468";
+
         var longitude = float.Parse(Environment.GetEnvironmentVariable(LONGITUDE) ?? DEFAULT_LONGITUDE);
         var latitude = float.Parse(Environment.GetEnvironmentVariable(LATITUDE) ?? DEFAULT_LATITUDE);
-        var agency = DistanceCalculator.Adapters.ModelAdapter.CreateAgency();
+
+        Models.Agency.INSTANCE = new DistanceCalculator.Models.TtcAgency();
+        var agency = Models.Agency.INSTANCE;
 
         IEnumerable<RouteInformation> routes;
         try
@@ -53,16 +56,16 @@ public class Program
                 continue;
             }
 
-            var lines = DistanceCalculator.Adapters.ModelAdapter.CreateLines(agency, route, longitude, latitude);
+            var lines = DistanceCalculator.Adapters.ModelAdapter.CreateLines(route, longitude, latitude);
             foreach (var line in lines)
             {
-                agency.Lines.Add(line);
+                Models.Agency.INSTANCE.Lines.Add(line);
             }
         }
 
         var allLines = agency.Lines;
         var closestStops = allLines.SelectMany(line => line.Stops)
-            .Where(stop => stop.Distance <= 5000d)
+            .Where(stop => stop.Distance <= 1000d)
             .OrderBy(stop => stop.Distance)
             .GroupBy(stop => stop.Line.FullName)
             .Select(stop => stop.First());
