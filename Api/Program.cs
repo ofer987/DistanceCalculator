@@ -1,5 +1,3 @@
-using DistanceCalculator.Common;
-
 namespace DistanceCalculator.Api;
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
@@ -9,7 +7,7 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 
 public class Program
 {
-    public static void Main(string[] args)
+    public async static Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -29,25 +27,26 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        var agency = await GetTtcAgency();
+        app.MapGet("/nearest-stops", (float latitude, float longitude) =>
+        {
+            Console.WriteLine($"{nameof(latitude)}={latitude}");
+            Console.WriteLine($"{nameof(longitude)}={longitude}");
+            var nearestStops = agency.GetNearestStops(latitude, longitude).ToArray();
+            foreach (var item in nearestStops)
+            {
+                Console.WriteLine(item.ToString());
+            }
+
+            return nearestStops;
+        })
+        .WithName("GetNearestStops")
+        .WithOpenApi();
+
         var summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
-
-        app.MapGet("/nearest-stops", () =>
-        {
-            var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-                .ToArray();
-            return forecast;
-        })
-        .WithName("GetWeatherForecast")
-        .WithOpenApi();
 
         app.MapGet("/weatherforecast", () =>
         {
@@ -65,5 +64,10 @@ public class Program
         .WithOpenApi();
 
         app.Run();
+    }
+
+    private static async Task<Common.Models.Agency> GetTtcAgency()
+    {
+        return await Common.Models.TtcAgency.GetAgency();
     }
 }

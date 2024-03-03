@@ -7,7 +7,7 @@ public class TtcModelAdapter : ModelAdapter
 {
     public TtcModelAdapter() : base("TTC") { }
 
-    public override IEnumerable<Models.Line> CreateLines(string agencyName, Route route)
+    public override IEnumerable<Models.Line> CreateLines(Route route)
     {
         foreach (var branch in route.Branches)
         {
@@ -17,7 +17,7 @@ public class TtcModelAdapter : ModelAdapter
                 case 400:
                     line = new Models.SubwayLine
                     {
-                        Agency = agencyName,
+                        Agency = AgencyName,
                         Id = route.Information.ShortName,
                         Name = branch.Direction.HeadSign,
                     };
@@ -25,7 +25,7 @@ public class TtcModelAdapter : ModelAdapter
                 case 900:
                     line = new Models.StreetcarLine
                     {
-                        Agency = agencyName,
+                        Agency = AgencyName,
                         Id = route.Information.ShortName,
                         Name = branch.Direction.BranchName,
                     };
@@ -34,7 +34,7 @@ public class TtcModelAdapter : ModelAdapter
                 default:
                     line = new Models.BusLine
                     {
-                        Agency = agencyName,
+                        Agency = AgencyName,
                         Id = route.Information.ShortName,
                         Name = branch.Direction.BranchName,
                     };

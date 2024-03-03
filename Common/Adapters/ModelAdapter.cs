@@ -11,5 +11,5 @@ public abstract class ModelAdapter
         AgencyName = agencyName;
     }
 
-    public abstract IEnumerable<Models.Line> CreateLines(string agencyName, Route route);
+    public abstract IEnumerable<Models.Line> CreateLines(Route route);
 }
