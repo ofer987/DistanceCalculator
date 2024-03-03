@@ -1,10 +1,13 @@
-namespace DistanceCalculator.Adapters;
+namespace DistanceCalculator.Common.Adapters;
 
-using DistanceCalculator.Extensions;
+using DistanceCalculator.Common.TtcModels;
+using DistanceCalculator.Common.Extensions;
 
-public static class ModelAdapter
+public class TtcModelAdapter : ModelAdapter
 {
-    public static IEnumerable<Models.Line> CreateLines(Route route)
+    public TtcModelAdapter() : base("TTC") { }
+
+    public override IEnumerable<Models.Line> CreateLines(string agencyName, Route route)
     {
         foreach (var branch in route.Branches)
         {
@@ -14,6 +17,7 @@ public static class ModelAdapter
                 case 400:
                     line = new Models.SubwayLine
                     {
+                        Agency = agencyName,
                         Id = route.Information.ShortName,
                         Name = branch.Direction.HeadSign,
                     };
@@ -21,6 +25,7 @@ public static class ModelAdapter
                 case 900:
                     line = new Models.StreetcarLine
                     {
+                        Agency = agencyName,
                         Id = route.Information.ShortName,
                         Name = branch.Direction.BranchName,
                     };
@@ -29,6 +34,7 @@ public static class ModelAdapter
                 default:
                     line = new Models.BusLine
                     {
+                        Agency = agencyName,
                         Id = route.Information.ShortName,
                         Name = branch.Direction.BranchName,
                     };

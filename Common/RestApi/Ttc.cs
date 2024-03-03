@@ -3,7 +3,9 @@ using System.Net.Http.Headers;
 
 using System.Text.Json;
 
-namespace DistanceCalculator.RestApi;
+using DistanceCalculator.Common.TtcModels;
+
+namespace DistanceCalculator.Common.RestApi;
 
 public static class Ttc
 {

@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.Json.Serialization;
 
+namespace DistanceCalculator.Common.TtcModels;
+
 public class RouteInformation : Serializable
 {
     [JsonRequired]

@@ -1,4 +1,4 @@
-namespace DistanceCalculator.Models;
+namespace DistanceCalculator.Common.Models;
 
 public class BusLine : Line
 {

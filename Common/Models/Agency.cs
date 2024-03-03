@@ -1,4 +1,4 @@
-namespace DistanceCalculator.Models;
+namespace DistanceCalculator.Common.Models;
 
 using System.Linq;
 

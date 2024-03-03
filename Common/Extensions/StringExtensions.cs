@@ -1,4 +1,4 @@
-namespace DistanceCalculator.Extensions;
+namespace DistanceCalculator.Common.Extensions;
 
 public static class StringExtensions
 {
