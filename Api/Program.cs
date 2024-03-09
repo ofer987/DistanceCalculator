@@ -7,9 +7,34 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 
 public class Program
 {
+    private const string DEVELOPMENT_POLICY = "DEVELOPMENT_POLICY";
+    private const string PRODUCTION_POLICY = "PRODUCTION_POLICY";
+
     public async static Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(
+                DEVELOPMENT_POLICY,
+                builder =>
+                {
+                    builder
+                        .WithOrigins("http://localhost:4173", "http://localhost:5173")
+                        .WithMethods("GET")
+                        .WithHeaders("Content-Type");
+                });
+
+            options.AddPolicy(
+                PRODUCTION_POLICY,
+                builder =>
+                {
+                    builder
+                        .WithOrigins("https://ttc.ofer.to")
+                        .WithMethods("GET")
+                        .WithHeaders("Content-Type");
+                });
+        });
 
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -23,6 +48,11 @@ public class Program
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseCors(DEVELOPMENT_POLICY);
+        }
+        else
+        {
+            app.UseCors(PRODUCTION_POLICY);
         }
 
         app.UseHttpsRedirection();
