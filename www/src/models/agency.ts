@@ -32,7 +32,12 @@ const getFailureMessage = (url: string) => {
 };
 
 const getNearestStops = async (latitude: number, longitude: number): Promise<Stop[]> => {
-	const url = `http://localhost:5292/nearest-stops?latitude=${latitude}&longitude=${longitude}`;
+	const origin = import.meta.env.API_ORIGIN;
+	if (!origin) {
+		throw 'API_ORIGIN environment variable has not been defined!';
+	}
+
+	const url = `${origin}/nearest-stops?latitude=${latitude}&longitude=${longitude}`;
 	console.log('hell');
 
 	const response = await fetch(url, { headers: { 'Content-Type': 'application/json' } });
