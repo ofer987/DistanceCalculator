@@ -37,14 +37,14 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Production": {
+    "Docker-Production": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
       "applicationUrl": "http://+:80",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Docker-Production"
+        "ASPNETCORE_ENVIRONMENT": "Production"
       }
     }
   }
