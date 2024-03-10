@@ -1,0 +1,6 @@
+version: "3.9"
+services:
+  danofer:
+    image: transit:latest
+    ports:
+      - "6000:80"
