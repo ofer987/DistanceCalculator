@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { getTimeTable } from '../models/agency';
-	import { onMount } from 'svelte';
 	import Line from './Line.svelte';
 
 	if (typeof navigator.geolocation == 'undefined') {
@@ -12,26 +11,20 @@
 	let longitude: number | null;
 	let geolocationCoordinatesFound: boolean | null;
 
-	onMount(() => {
-		if (
-			typeof window != 'undefined' &&
-			typeof window.navigator != 'undefined' &&
-			typeof navigator.geolocation != 'undefined'
-		) {
-			navigator.geolocation.getCurrentPosition(
-				(position) => {
-					latitude = position.coords.latitude;
-					longitude = position.coords.longitude;
+	if (window?.navigator?.geolocation) {
+		navigator.geolocation.getCurrentPosition(
+			(position) => {
+				latitude = position.coords.latitude;
+				longitude = position.coords.longitude;
 
-					geolocationCoordinatesFound = true;
-				},
-				() => {
-					geolocationCoordinatesFound = false;
-				},
-				{ timeout: 5000 }
-			);
-		}
-	});
+				geolocationCoordinatesFound = true;
+			},
+			() => {
+				geolocationCoordinatesFound = false;
+			},
+			{ timeout: 5000 }
+		);
+	}
 </script>
 
 <div>
@@ -50,6 +43,7 @@
 						class:subway-type={line.lineType == 'Subway'}
 						class:streetcar-type={line.lineType == 'Streetcar'}
 						class:bus-type={line.lineType == 'Bus'}
+						class:disabled={!line.isAvailable}
 					>
 						<div id="agency-name">{line.agencyName}</div>
 						<div id="type">{line.lineType}</div>
@@ -78,6 +72,10 @@
 		.line {
 			border-width: 0.1em;
 			border-style: solid;
+
+			&.disabled {
+				display: none;
+			}
 
 			&.subway-type {
 				border-color: blue;
