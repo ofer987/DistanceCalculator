@@ -30,7 +30,7 @@ public class Program
                 builder =>
                 {
                     builder
-                        .WithOrigins("https://ttc.ofer.to")
+                        .WithOrigins("https://transit.ofer.to")
                         .WithMethods("GET")
                         .WithHeaders("Content-Type");
                 });

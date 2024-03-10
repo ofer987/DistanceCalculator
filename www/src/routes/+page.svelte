@@ -58,7 +58,7 @@
 				{/each}
 			</div>
 		{:catch error}
-			<div>Oops ${error}</div>
+			<div>Oops {error}</div>
 		{/await}
 	{/if}
 </div>
