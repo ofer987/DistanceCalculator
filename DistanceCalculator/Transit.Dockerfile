@@ -10,4 +10,4 @@ RUN dotnet clean
 RUN dotnet build
 
 WORKDIR /source/Api
-CMD dotnet run --launch-profile "Production"
+CMD dotnet run --launch-profile "Docker-Production"
