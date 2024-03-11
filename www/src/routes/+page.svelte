@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { getTimeTable } from '../models/agency';
 	import Line from './Line.svelte';
+	import Loading from './Loading.svelte';
+	import Error from './Error.svelte';
 
 	if (typeof navigator.geolocation == 'undefined') {
 		alert('Browser does not support geolocation');
@@ -28,24 +30,12 @@
 </script>
 
 {#if geolocationCoordinatesFound == null}
-	<div class="centre loading">
-		<div class="text">Loading</div>
-		<div class="loading-item" id="first" />
-		<div class="loading-item" id="second" />
-		<div class="loading-item" id="third" />
-	</div>
+	<Loading />
 {:else if !geolocationCoordinatesFound || !latitude || !longitude}
-	<div class="centre error">
-		<div class="text">{errorMessage}</div>
-	</div>
+	<Error message={errorMessage} />
 {:else}
 	{#await getTimeTable(latitude, longitude)}
-		<div class="centre loading">
-			<div class="text">Loading</div>
-			<div class="loading-item" id="first" />
-			<div class="loading-item" id="second" />
-			<div class="loading-item" id="third" />
-		</div>
+		<Loading />
 	{:then lines}
 		<div class="timetable">
 			{#each lines as line}
@@ -69,68 +59,11 @@
 			{/each}
 		</div>
 	{:catch}
-		<div class="centre error">
-			<div class="text">Unable to reach server</div>
-		</div>
+		<Error message="Unable to reach server" />
 	{/await}
 {/if}
 
 <style lang="scss">
-	.centre {
-		position: fixed;
-		top: 50%;
-		width: 100%;
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-
-		.text {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-		}
-
-		.loading-item {
-			width: 2em;
-			height: 2em;
-			color: black;
-			background-color: blue;
-			margin: 0 1em;
-
-			animation-play-state: running;
-			animation-fill-mode: none;
-			animation-name: blink;
-			animation-duration: 1s;
-			animation-iteration-count: infinite;
-
-			@keyframes blink {
-				0% {
-					opacity: 0;
-				}
-
-				50% {
-					opacity: 1;
-				}
-
-				100% {
-					opacity: 0;
-				}
-			}
-
-			&#first {
-				animation-timing-function: steps(4, jump-end);
-			}
-
-			&#second {
-				animation-timing-function: steps(2, jump-end);
-			}
-
-			&#third {
-				animation-timing-function: steps(1, jump-end);
-			}
-		}
-	}
-
 	.timetable {
 		display: flex;
 		flex-direction: column;
