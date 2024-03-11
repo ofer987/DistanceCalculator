@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { getTimeTable } from '../models/agency';
 	import Line from './Line.svelte';
+	import Loading from './Loading.svelte';
+	import Error from './Error.svelte';
 
 	if (typeof navigator.geolocation == 'undefined') {
 		alert('Browser does not support geolocation');
@@ -27,41 +29,39 @@
 	}
 </script>
 
-<div>
-	{#if geolocationCoordinatesFound == null}
-		<div>Loading</div>
-	{:else if !geolocationCoordinatesFound || !latitude || !longitude}
-		<div>{errorMessage}</div>
-	{:else}
-		{#await getTimeTable(latitude, longitude)}
-			<div>Loading</div>
-		{:then lines}
-			<div class="timetable">
-				{#each lines as line}
-					<div
-						class="line"
-						class:subway-type={line.lineType == 'Subway'}
-						class:streetcar-type={line.lineType == 'Streetcar'}
-						class:bus-type={line.lineType == 'Bus'}
-						class:disabled={!line.isAvailable}
-					>
-						<div id="agency-name">{line.agencyName}</div>
-						<div id="type">{line.lineType}</div>
-						<div id="id">{line.id}</div>
+{#if geolocationCoordinatesFound == null}
+	<Loading />
+{:else if !geolocationCoordinatesFound || !latitude || !longitude}
+	<Error message={errorMessage} />
+{:else}
+	{#await getTimeTable(latitude, longitude)}
+		<Loading />
+	{:then lines}
+		<div class="timetable">
+			{#each lines as line}
+				<div
+					class="line"
+					class:subway-type={line.lineType == 'Subway'}
+					class:streetcar-type={line.lineType == 'Streetcar'}
+					class:bus-type={line.lineType == 'Bus'}
+					class:disabled={!line.isAvailable}
+				>
+					<div id="agency-name">{line.agencyName}</div>
+					<div id="type">{line.lineType}</div>
+					<div id="id">{line.id}</div>
 
-						<div class="directions">
-							{#each line.directions as direction}
-								<Line {direction} />
-							{/each}
-						</div>
+					<div class="directions">
+						{#each line.directions as direction}
+							<Line {direction} />
+						{/each}
 					</div>
-				{/each}
-			</div>
-		{:catch error}
-			<div>Oops {error}</div>
-		{/await}
-	{/if}
-</div>
+				</div>
+			{/each}
+		</div>
+	{:catch}
+		<Error message="Unable to reach server" />
+	{/await}
+{/if}
 
 <style lang="scss">
 	.timetable {
