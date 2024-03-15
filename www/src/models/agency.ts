@@ -20,6 +20,7 @@ interface Line {
 interface Stop {
 	line: Line;
 	id: number;
+	name: string;
 	latitude: number;
 	longitude: number;
 }
@@ -75,6 +76,7 @@ const getLines = async (latitude: number, longitude: number): Promise<LineModel[
 
 		const stop = new StopModel(
 			item.id,
+			item.name,
 			item.line.id,
 			item.line.fullName,
 			item.latitude,

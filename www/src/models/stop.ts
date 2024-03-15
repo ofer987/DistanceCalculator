@@ -1,5 +1,6 @@
 class StopModel {
 	id: number;
+	name: string;
 	lineId: number;
 	lineFullName: string;
 	latitude: number;
@@ -12,12 +13,14 @@ class StopModel {
 
 	constructor(
 		id: number,
+		name: string,
 		lineId: number,
 		lineFullName: string,
 		latitude: number,
 		longitude: number
 	) {
 		this.id = id;
+		this.name = name;
 		this.lineId = lineId;
 		this.lineFullName = lineFullName;
 		this.latitude = latitude;
