@@ -1,10 +1,10 @@
 namespace DistanceCalculator.Common.Models;
 
-public class TtcAgency : Agency
+public class YrtAgency : Agency
 {
     public async static Task<Agency> GetAgency()
     {
-        var agency = new TtcAgency();
+        var agency = new YrtAgency();
 
         IEnumerable<TtcModels.RouteInformation> routes;
         try
