@@ -104,21 +104,21 @@ const getTimeTable = async (latitude: number, longitude: number): Promise<LineMo
 
 	const now = TimeModel.now();
 	for (const line of lines) {
+		const schedules = await getSchedules(line.id);
+
 		for (const direction of line.directions) {
 			for (const stop of direction.stops) {
-				let schedule;
+				const schedule = getSchedule(schedules, stop.id);
 				let timeTable;
 
 				switch (line.lineType) {
 					case 'Subway':
-						schedule = await getSchedule(line.id, stop.id);
-
 						stop.timetable = getArrivals(now, schedule.routeStopTimes);
+
 						break;
 					case 'Bus':
 					case 'Streetcar':
 					default:
-						schedule = await getSchedule(line.id, stop.id);
 						timeTable = await getNextTimeTable(line.id, schedule.code);
 						stop.timetable = timeTable.map((item) => item.nextBusMinutes);
 				}
@@ -153,7 +153,7 @@ const getMinutesFromStopTime = (input: string): number => {
 	return hours * 60 + minutes;
 };
 
-const getSchedule = async (lineId: number, stopId: number): Promise<Schedule> => {
+const getSchedules = async (lineId: number): Promise<Schedule[]> => {
 	const url = `https://www.ttc.ca/ttcapi/routedetail/get?id=${lineId}`;
 
 	const response = await fetch(url);
@@ -169,6 +169,10 @@ const getSchedule = async (lineId: number, stopId: number): Promise<Schedule> =>
 	console.log(json);
 	const schedules = json as Schedule[];
 
+	return schedules;
+};
+
+const getSchedule = (schedules: Schedule[], stopId: number): Schedule => {
 	return schedules.filter((item) => item.id == stopId)[0];
 };
 
