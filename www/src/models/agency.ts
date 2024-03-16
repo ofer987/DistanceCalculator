@@ -7,6 +7,11 @@ import { TimeModel } from './schedule';
 interface Schedule {
 	id: number;
 	routeStopTimes: string[];
+	code: number;
+}
+
+interface NextBusStop {
+	nextBusMinutes: number;
 }
 
 interface Line {
@@ -101,9 +106,22 @@ const getTimeTable = async (latitude: number, longitude: number): Promise<LineMo
 	for (const line of lines) {
 		for (const direction of line.directions) {
 			for (const stop of direction.stops) {
-				const schedule = await getSchedules(line.id, stop.id);
+				let schedule;
+				let timeTable;
 
-				stop.timetable = getArrivals(now, schedule.routeStopTimes);
+				switch (line.lineType) {
+					case 'Subway':
+						schedule = await getSchedule(line.id, stop.id);
+
+						stop.timetable = getArrivals(now, schedule.routeStopTimes);
+						break;
+					case 'Bus':
+					case 'Streetcar':
+					default:
+						schedule = await getSchedule(line.id, stop.id);
+						timeTable = await getNextTimeTable(line.id, schedule.code);
+						stop.timetable = timeTable.map((item) => item.nextBusMinutes);
+				}
 			}
 		}
 	}
@@ -135,7 +153,7 @@ const getMinutesFromStopTime = (input: string): number => {
 	return hours * 60 + minutes;
 };
 
-const getSchedules = async (lineId: number, stopId: number): Promise<Schedule> => {
+const getSchedule = async (lineId: number, stopId: number): Promise<Schedule> => {
 	const url = `https://www.ttc.ca/ttcapi/routedetail/get?id=${lineId}`;
 
 	const response = await fetch(url);
@@ -154,4 +172,21 @@ const getSchedules = async (lineId: number, stopId: number): Promise<Schedule> =
 	return schedules.filter((item) => item.id == stopId)[0];
 };
 
-export { getNearestStops, getSchedules, getTimeTable };
+const getNextTimeTable = async (lineId: number, stopCode: number): Promise<NextBusStop[]> => {
+	const url = `https://www.ttc.ca/ttcapi/routedetail/GetNextBuses?routeId=${lineId}&stopCode=${stopCode}`;
+
+	const response = await fetch(url);
+	if (!response.ok) {
+		throw getFailureMessage(url);
+	}
+
+	const body = await response.text();
+
+	const json = JSON.parse(body);
+	console.log(json);
+	const schedules = json as NextBusStop[];
+
+	return schedules;
+};
+
+export { getNearestStops, getTimeTable };
