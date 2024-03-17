@@ -55,7 +55,7 @@
 			}
 
 			&#second {
-				animation-timing-function: steps(2, jump-end);
+				animation-timing-function: steps(3, jump-end);
 			}
 
 			&#third {

@@ -2,6 +2,7 @@ using CsvHelper.Configuration.Attributes;
 
 namespace DistanceCalculator.YrtModels;
 
+[Delimiter(",")]
 public class Stop
 {
     [Name("stop_id")]

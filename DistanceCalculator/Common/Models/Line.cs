@@ -4,17 +4,18 @@ namespace DistanceCalculator.Common.Models;
 
 public enum LineTypes { Subway = 0, Bus, Streetcar };
 
-public abstract class Line
+public class Line
 {
     [JsonPropertyName("type")]
-    public abstract LineTypes Type { get; }
+    public virtual LineTypes Type { get; init; } = LineTypes.Bus;
 
     [JsonPropertyName("agencyName")]
     public required string Agency { get; init; }
 
     [JsonPropertyName("id")]
-    public required string Id { get; init; }
+    public required int Id { get; init; }
 
+    [JsonPropertyName("name")]
     public required string Name { get; init; }
 
     [JsonPropertyName("fullName")]

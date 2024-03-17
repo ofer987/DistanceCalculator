@@ -7,8 +7,15 @@ namespace DistanceCalculator.Common.Models;
 
 public class Stop
 {
+    [JsonPropertyName("trip")]
+    public IList<Trip> Trips { get; init; } = new List<Trip>();
+
+    // TODO: change to init with JSONIgnore
     [JsonPropertyName("line")]
     public required Line Line { get; init; }
+
+    [JsonPropertyName("lineId")]
+    public int LineId => Line.Id;
 
     [JsonPropertyName("id")]
     public required int Id { get; init; }
@@ -17,10 +24,10 @@ public class Stop
     public required string Name { get; init; }
 
     [JsonPropertyName("latitude")]
-    public required float Latitude { get; init; }
+    public required double Latitude { get; init; }
 
     [JsonPropertyName("longitude")]
-    public required float Longitude { get; init; }
+    public required double Longitude { get; init; }
 
     public double GetDistance(float latitude, float longitude)
     {

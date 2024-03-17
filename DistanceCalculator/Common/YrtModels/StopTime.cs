@@ -5,7 +5,7 @@ namespace DistanceCalculator.YrtModels;
 public class StopTime
 {
     [Name("trip_id")]
-    public int Id { get; init; }
+    public int TripId { get; init; }
 
     [Name("arrival_time")]
     public string ArrivalTime { get; init; } = string.Empty;

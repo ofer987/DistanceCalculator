@@ -1,6 +1,7 @@
 import { PUBLIC_API_ORIGIN } from '$env/static/public';
 import { LineModel } from './line';
-import { DirectionModel } from './direction';
+import { TripModel } from './trip';
+// import { DirectionModel } from './direction';
 import { StopModel } from './stop';
 import { TimeModel } from './schedule';
 
@@ -14,20 +15,30 @@ interface NextBusStop {
 	nextBusMinutes: number;
 }
 
+interface Stop {
+	id: number;
+	lineId: number;
+	name: string;
+	latitude: number;
+	longitude: number;
+  // TODO: rename to trips
+	trip: Trip[];
+	line: Line;
+}
+
+interface Trip {
+	id: number;
+	trip_headsign: string;
+	stop_id: number;
+	schedule: string[];
+}
+
 interface Line {
 	type: number;
 	agencyName: string;
 	id: number;
 	name: string;
 	fullName: string;
-}
-
-interface Stop {
-	line: Line;
-	id: number;
-	name: string;
-	latitude: number;
-	longitude: number;
 }
 
 interface routeBranchesWithStops {
@@ -61,7 +72,7 @@ const getLines = async (latitude: number, longitude: number): Promise<LineModel[
 	const linesHash: Record<number, LineModel> = {};
 
 	stops.forEach((item) => {
-		if (item.line.name == 'ALL BRANCHES') {
+		if (item.name == 'ALL BRANCHES') {
 			return;
 		}
 
@@ -77,8 +88,6 @@ const getLines = async (latitude: number, longitude: number): Promise<LineModel[
 		}
 		console.log(`Line Id: ${line.id}`);
 
-		const direction = new DirectionModel(item.line.name);
-
 		const stop = new StopModel(
 			item.id,
 			item.name,
@@ -88,8 +97,12 @@ const getLines = async (latitude: number, longitude: number): Promise<LineModel[
 			item.longitude
 		);
 
-		direction.stops.push(stop);
-		line.directions.push(direction);
+    for (const trip of item.trip) {
+      const tripModel = new TripModel(trip.id, trip.trip_headsign, trip.schedule);
+      stop.trips.push(tripModel);
+    }
+
+		line.stops.push(stop);
 	});
 
 	const keys = Object.keys(linesHash);
@@ -106,9 +119,9 @@ const getTimeTable = async (latitude: number, longitude: number): Promise<LineMo
 	for (const line of lines) {
 		const schedules = await getSchedules(line.id);
 
-		for (const direction of line.directions) {
-			for (const stop of direction.stops) {
-				const schedule = getSchedule(schedules, stop.id);
+		for (const stop of line.stops) {
+			for (const trip of stop.trips) {
+				const schedule = getSchedule(schedules, trip.id);
 				let timeTable;
 
 				switch (line.lineType) {

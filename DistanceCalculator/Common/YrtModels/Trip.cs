@@ -5,7 +5,7 @@ namespace DistanceCalculator.YrtModels;
 public class Trip
 {
     [Name("trip_id")]
-    public int Id { get; init; }
+    public int TripId { get; init; }
 
     [Name("route_id")]
     public int RouteId { get; init; }

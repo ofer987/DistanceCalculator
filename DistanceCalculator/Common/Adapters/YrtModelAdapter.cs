@@ -1,66 +1,71 @@
 namespace DistanceCalculator.Common.Adapters;
 
-using DistanceCalculator.Common.TtcModels;
-using DistanceCalculator.Common.Extensions;
+// using DistanceCalculator.Common.Extensions;
 
-public class YrtModelAdapter : ModelAdapter
+public class YrtModelAdapter
 {
-    public YrtModelAdapter() : base("YRT/VIVA") { }
+    // public YrtModelAdapter() : base("YRT/VIVA") { }
 
-    public override IEnumerable<Models.Line> CreateLines(Route route)
+    public IDictionary<int, YrtModels.Route> Routes { get; private set; } = new Dictionary<int, YrtModels.Route>();
+
+    public IDictionary<int, YrtModels.Stop> Stops { get; private set; } = new Dictionary<int, YrtModels.Stop>();
+
+    public IList<YrtModels.StopTime> StopTimes { get; private set; } = new List<YrtModels.StopTime>();
+
+    public IList<YrtModels.Trip> Trips { get; private set; } = new List<YrtModels.Trip>();
+
+    public YrtModelAdapter(IEnumerable<YrtModels.Route> routes, IEnumerable<YrtModels.Stop> stops, IEnumerable<YrtModels.StopTime> stopTimes, IEnumerable<YrtModels.Trip> trips)
     {
-        foreach (var branch in route.Branches)
-        {
-            Models.Line line;
-            switch (route.Information.Type)
-            {
-                case 400:
-                    line = new Models.SubwayLine
-                    {
-                        Agency = AgencyName,
-                        Id = route.Information.ShortName,
-                        Name = branch.Direction.HeadSign,
-                    };
-                    break;
-                case 900:
-                    line = new Models.StreetcarLine
-                    {
-                        Agency = AgencyName,
-                        Id = route.Information.ShortName,
-                        Name = branch.Direction.BranchName,
-                    };
-                    break;
-                case 700:
-                default:
-                    line = new Models.BusLine
-                    {
-                        Agency = AgencyName,
-                        Id = route.Information.ShortName,
-                        Name = branch.Direction.BranchName,
-                    };
-                    break;
-            }
+        Routes = routes.ToDictionary(item => item.Id, item => item);
+        Stops = stops.ToDictionary(item => item.Id, item => item);
+        StopTimes = stopTimes.ToList();
+        Trips = trips.ToList();
+    }
 
-            if (line.Name.IsEmpty())
+    public IList<Models.Line> GetLines()
+    {
+        var lines = new List<Models.Line>();
+        foreach (var trip in Trips)
+        {
+            var routeId = trip.RouteId;
+
+            if (!Routes.TryGetValue(routeId, out var route) || route is null)
             {
                 continue;
             }
 
-            foreach (var stop in branch.Stops)
+            var line = new Models.Line
             {
-                var station = new Models.Stop
+                Id = route.Id,
+                Agency = "YRT / VIVA",
+                Name = route.GetName()
+            };
+
+            var stopTimes = StopTimes.Where(stopTime => stopTime.TripId == trip.TripId
+                    && stopTime.StopId == stopTime.TripId);
+
+            foreach (var stopTime in stopTimes)
+            {
+                if (!Stops.TryGetValue(stopTime.StopId, out var yrtStop) || yrtStop is null)
+                {
+                    continue;
+                }
+
+                var stop = new Models.Stop
                 {
                     Line = line,
-                    Id = stop.Id,
-                    Name = stop.Name,
-                    Latitude = stop.Latitude,
-                    Longitude = stop.Longitude
+                    Name = trip.TripShortName,
+                    Id = stopTime.StopId,
+                    Latitude = yrtStop.Latitude,
+                    Longitude = yrtStop.Longitude
                 };
 
-                line.Stops.Add(station);
+                line.Stops.Add(stop);
             }
 
-            yield return line;
+            lines.Add(line);
         }
+
+        return lines;
     }
 }

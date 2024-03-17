@@ -18,7 +18,7 @@ public class TtcModelAdapter : ModelAdapter
                     line = new Models.SubwayLine
                     {
                         Agency = AgencyName,
-                        Id = route.Information.ShortName,
+                        Id = int.Parse(route.Information.ShortName),
                         Name = branch.Direction.HeadSign,
                     };
                     break;
@@ -26,7 +26,7 @@ public class TtcModelAdapter : ModelAdapter
                     line = new Models.StreetcarLine
                     {
                         Agency = AgencyName,
-                        Id = route.Information.ShortName,
+                        Id = int.Parse(route.Information.ShortName),
                         Name = branch.Direction.BranchName,
                     };
                     break;
@@ -35,12 +35,11 @@ public class TtcModelAdapter : ModelAdapter
                     line = new Models.BusLine
                     {
                         Agency = AgencyName,
-                        Id = route.Information.ShortName,
+                        Id = int.Parse(route.Information.ShortName),
                         Name = branch.Direction.BranchName,
                     };
                     break;
             }
-
             if (line.Name.IsEmpty())
             {
                 continue;
@@ -56,6 +55,15 @@ public class TtcModelAdapter : ModelAdapter
                     Latitude = stop.Latitude,
                     Longitude = stop.Longitude
                 };
+
+                var trip = new Models.Trip
+                {
+                    Line = line,
+                    Stop = station,
+                    Id = station.Id,
+                    Name = stop.Name,
+                };
+                station.Trips.Add(trip);
 
                 line.Stops.Add(station);
             }

@@ -1,15 +1,15 @@
 type LineTypes = 'Subway' | 'Bus' | 'Streetcar';
 
-import { DirectionModel } from './direction';
+import { StopModel } from './stop';
 
 class LineModel {
 	type: number;
 	agencyName: string;
 	id: number;
-  directions: DirectionModel[] = [];
+	stops: StopModel[] = [];
 
 	get isAvailable(): boolean {
-		for (const direction of this.directions) {
+		for (const direction of this.stops) {
 			if (!direction.isAvailable) {
 				return false;
 			}

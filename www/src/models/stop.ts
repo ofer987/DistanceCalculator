@@ -1,3 +1,5 @@
+import { TripModel } from './trip';
+
 class StopModel {
 	id: number;
 	name: string;
@@ -6,6 +8,7 @@ class StopModel {
 	latitude: number;
 	longitude: number;
 	timetable: number[] = [];
+	trips: TripModel[] = [];
 
 	get isAvailable(): boolean {
 		return this.timetable.length > 0;

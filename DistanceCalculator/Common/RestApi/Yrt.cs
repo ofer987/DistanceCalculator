@@ -1,76 +1,44 @@
-using System.Net;
-using System.Net.Http.Headers;
+using System.Globalization;
 
-using System.Text.Json;
-
-using DistanceCalculator.Common.TtcModels;
+using CsvHelper;
 
 namespace DistanceCalculator.Common.RestApi;
 
 public static class Yrt
 {
-    // Get Bus Lines
-    // https://www.ttc.ca/ttcapi/routedetail/listroutes
-    public static async Task<IEnumerable<RouteInformation>> GetRoutes()
-    {
-        var uri = "https://www.ttc.ca/ttcapi/routedetail/listroutes";
+    public static string RoutesPath = "routes.txt";
+    public static string StopsPath = "stops.txt";
+    public static string StopTimesPath = "stop_times.txt";
+    public static string TripsPath = "trips.txt";
 
-        return await GetEnumerableJson<RouteInformation>(uri);
+    // Maybe convert to generic using a GetRecord???????
+    public static YrtModels.Route[] GetRoutes()
+    {
+        using var reader = new StreamReader(RoutesPath);
+        using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+        return csvReader.GetRecords<YrtModels.Route>().ToArray();
     }
 
-    // https://www.ttc.ca/ttcapi/routedetail/get?id={id}
-    public static async Task<Route> GetRoute(int id)
+    public static YrtModels.Stop[] GetStops()
     {
-        var uri = $"https://www.ttc.ca/ttcapi/routedetail/get?id={id}";
+        using var reader = new StreamReader(StopsPath);
+        using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-        return await GetJson<Route>(uri);
+        return csvReader.GetRecords<YrtModels.Stop>().ToArray();
     }
-
-    private static async Task<T> GetJson<T>(string uri) where T : Serializable
+    public static YrtModels.StopTime[] GetStopTimes()
     {
-        using var client = new HttpClient();
-        using var request = new HttpRequestMessage(HttpMethod.Get, uri);
-        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        using var reader = new StreamReader(RoutesPath);
+        using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-        Console.WriteLine(uri);
-        using var response = await client.SendAsync(request);
-        if (response.StatusCode != HttpStatusCode.OK)
-        {
-            throw new HttpRequestException($"Received {response.StatusCode} instead of {HttpStatusCode.OK}");
-        }
-
-        var body = await response.Content.ReadAsStringAsync() ?? string.Empty;
-
-        var result = JsonSerializer.Deserialize<T>(body);
-        if (result is null)
-        {
-            throw new HttpRequestException($"Failed to deserialize to type {typeof(T)}");
-        }
-
-        return result;
+        return csvReader.GetRecords<YrtModels.StopTime>().ToArray();
     }
-
-    private static async Task<IEnumerable<T>> GetEnumerableJson<T>(string uri) where T : Serializable
+    public static YrtModels.Trip[] GetTrips()
     {
-        using var client = new HttpClient();
-        using var request = new HttpRequestMessage(HttpMethod.Get, uri);
-        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        using var reader = new StreamReader(RoutesPath);
+        using var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-        using var response = await client.SendAsync(request);
-        if (response.StatusCode != HttpStatusCode.OK)
-        {
-            throw new HttpRequestException($"Received {response.StatusCode} instead of {HttpStatusCode.OK}");
-        }
-
-
-        var body = await response.Content.ReadAsStringAsync() ?? string.Empty;
-
-        var result = JsonSerializer.Deserialize<IEnumerable<T>>(body);
-        if (result is null)
-        {
-            throw new HttpRequestException($"Failed to deserialize to type {typeof(IEnumerable<RouteInformation>)}");
-        }
-
-        return result;
+        return csvReader.GetRecords<YrtModels.Trip>().ToArray();
     }
 }
