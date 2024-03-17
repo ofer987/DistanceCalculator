@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { StopModel } from '../models/stop';
+	// import Trip from './Trip.svelte';
 	import Time from './Time.svelte';
 
 	export let stop: StopModel;
@@ -11,7 +12,9 @@
 	<div class="stop" class:disabled={!stop.isAvailable}>
 		<div id="name">{stop.name}</div>
 
-		<Time time={stop.timetable} />
+		{#each stop.trips as trip}
+			<Time {trip} />
+		{/each}
 	</div>
 </a>
 

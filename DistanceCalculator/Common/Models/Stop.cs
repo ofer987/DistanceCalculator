@@ -10,7 +10,6 @@ public class Stop
     [JsonPropertyName("trip")]
     public IList<Trip> Trips { get; init; } = new List<Trip>();
 
-    // TODO: change to init with JSONIgnore
     [JsonPropertyName("line")]
     public required Line Line { get; init; }
 

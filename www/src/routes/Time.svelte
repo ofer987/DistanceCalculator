@@ -1,23 +1,28 @@
 <script lang="ts">
-	export let time: number[];
+	import { TripModel } from '../models/trip';
 
-	console.log(`there are ${time.length} objects`);
+	export let trip: TripModel;
+
+	console.log(`there are ${trip.schedule.arrivals.length} objects`);
 </script>
 
-<div class="arrivals" class:is-displayed={time.length > 0}>
+<div class="arrivals" class:disabled={!trip.schedule.isAvailable}>
 	<h3>Schedule</h3>
 
-	{#each time as item}
-		<div>Arriving in {item} minutes</div>
+	<div class="id">{trip.id}</div>
+	<div class="name">{trip.name}</div>
+
+	{#each trip.schedule.arrivals as arrival}
+		<div>Arriving in {arrival} minutes</div>
 	{/each}
 </div>
 
 <style lang="scss">
 	.arrivals {
-		display: none;
+		display: block;
 
-		&.is-displayed {
-			display: block;
+		&.disabled {
+			display: none;
 		}
 	}
 </style>

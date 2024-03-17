@@ -11,7 +11,22 @@ class StopModel {
 	trips: TripModel[] = [];
 
 	get isAvailable(): boolean {
-		return this.timetable.length > 0;
+		for (const trip of this.trips) {
+			if (trip.isAvailable) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	pushTrip(id: number, name: string, arrivals: string[]): void {
+		if (arrivals.length == 0) {
+			return;
+		}
+
+		const trip = new TripModel(id, name, arrivals);
+		this.trips.push(trip);
 	}
 
 	constructor(

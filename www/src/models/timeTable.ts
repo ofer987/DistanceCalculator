@@ -1,13 +1,11 @@
 class TimeTableModel {
-	arrivals: string[];
+	arrivals: string[] = [];
 
 	get isAvailable(): boolean {
 		return this.arrivals.length != 0;
 	}
 
-	constructor(arrivals: string[]) {
-		this.arrivals = arrivals;
-	}
+	constructor() {}
 }
 
 export { TimeTableModel };

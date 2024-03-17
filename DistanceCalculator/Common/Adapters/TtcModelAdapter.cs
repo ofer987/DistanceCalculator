@@ -56,10 +56,8 @@ public class TtcModelAdapter : ModelAdapter
                     Longitude = stop.Longitude
                 };
 
-                var trip = new Models.Trip
+                var trip = new Models.Trip(line, station)
                 {
-                    Line = line,
-                    Stop = station,
                     Id = station.Id,
                     Name = stop.Name,
                 };

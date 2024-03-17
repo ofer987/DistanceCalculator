@@ -19,6 +19,9 @@
 				latitude = position.coords.latitude;
 				longitude = position.coords.longitude;
 
+				console.log(`latitude is ${latitude}`);
+				console.log(`longitude is ${longitude}`);
+
 				geolocationCoordinatesFound = true;
 			},
 			() => {
@@ -39,23 +42,7 @@
 	{:then lines}
 		<div class="timetable">
 			{#each lines as line}
-				<div
-					class="line"
-					class:subway-type={line.lineType == 'Subway'}
-					class:streetcar-type={line.lineType == 'Streetcar'}
-					class:bus-type={line.lineType == 'Bus'}
-					class:disabled={!line.isAvailable}
-				>
-					<div id="agency-name">{line.agencyName}</div>
-					<div id="type">{line.lineType}</div>
-					<div id="id">{line.id}</div>
-
-					<div class="directions">
-						{#each line.directions as direction}
-							<Line {direction} />
-						{/each}
-					</div>
-				</div>
+				<Line {line} />
 			{/each}
 		</div>
 	{:catch}
@@ -68,32 +55,5 @@
 		display: flex;
 		flex-direction: column;
 		gap: 2em;
-
-		.line {
-			border-width: 0.1em;
-			border-style: solid;
-
-			&.disabled {
-				display: none;
-			}
-
-			&.subway-type {
-				border-color: blue;
-			}
-
-			&.streetcar-type {
-				border-color: turquoise;
-			}
-
-			&.bus-type {
-				border-color: green;
-			}
-
-			.directions {
-				display: flex;
-				flex-direction: row;
-				justify-content: space-between;
-			}
-		}
 	}
 </style>

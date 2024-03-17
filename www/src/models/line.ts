@@ -9,13 +9,13 @@ class LineModel {
 	stops: StopModel[] = [];
 
 	get isAvailable(): boolean {
-		for (const direction of this.stops) {
-			if (!direction.isAvailable) {
-				return false;
+		for (const stop of this.stops) {
+			if (stop.isAvailable) {
+				return true;
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	get lineType(): LineTypes {

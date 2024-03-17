@@ -12,7 +12,7 @@ interface Schedule {
 }
 
 interface NextBusStop {
-	nextBusMinutes: number;
+	nextBusMinutes: string;
 }
 
 interface Stop {
@@ -21,7 +21,7 @@ interface Stop {
 	name: string;
 	latitude: number;
 	longitude: number;
-  // TODO: rename to trips
+	// TODO: rename to trips
 	trip: Trip[];
 	line: Line;
 }
@@ -97,10 +97,10 @@ const getLines = async (latitude: number, longitude: number): Promise<LineModel[
 			item.longitude
 		);
 
-    for (const trip of item.trip) {
-      const tripModel = new TripModel(trip.id, trip.trip_headsign, trip.schedule);
-      stop.trips.push(tripModel);
-    }
+		for (const trip of item.trip) {
+			const tripModel = new TripModel(trip.id, trip.trip_headsign, trip.schedule);
+			stop.trips.push(tripModel);
+		}
 
 		line.stops.push(stop);
 	});
@@ -123,17 +123,38 @@ const getTimeTable = async (latitude: number, longitude: number): Promise<LineMo
 			for (const trip of stop.trips) {
 				const schedule = getSchedule(schedules, trip.id);
 				let timeTable;
+				// let tripModel;
 
 				switch (line.lineType) {
 					case 'Subway':
-						stop.timetable = getArrivals(now, schedule.routeStopTimes);
+						trip.schedule.arrivals = getArrivals(now, schedule.routeStopTimes).map((item) =>
+							item.toString()
+						);
 
 						break;
 					case 'Bus':
 					case 'Streetcar':
 					default:
 						timeTable = await getNextTimeTable(line.id, schedule.code);
-						stop.timetable = timeTable.map((item) => item.nextBusMinutes);
+						trip.schedule.arrivals = timeTable.map((item) => item.nextBusMinutes);
+					// stop.pushTrip(
+					// 	trip.id,
+					// 	trip.name,
+					// 	timeTable.map((item) => item.nextBusMinutes)
+					// );
+					// if (timeTable.length != 0) {
+					// 	stop.trips.push(new TripModel(trip.id, trip.name));
+					//
+					// 	for (const arrival of timeTable) {
+					// 		stop.trips[0].schedule.arrivals.push(arrival.nextBusMinutes);
+					// 	}
+					// }
+					// stop.trips;
+					// stop.trips.push(new TripModel(trip.id, trip.name));
+					// stop.timetable = timeTable.map((item) => item.nextBusMinutes);
+					// for (const value of stop.timetable) {
+					// 	console.log(`Time at ${value}`);
+					// }
 				}
 			}
 		}

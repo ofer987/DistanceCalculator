@@ -25,11 +25,16 @@ public class Trip
     public int StopId => Stop.Id;
 
     [JsonIgnore]
-    public Line? Line { get; init; } = null;
+    public Line Line { get; private set; }
 
     [JsonIgnore]
-    public Stop? Stop { get; init; } = null;
+    public Stop Stop { get; private set; }
 
     [JsonPropertyName("schedule")]
     public IList<Time> Schedule { get; init; } = new List<Time>();
+
+    public Trip(Line line, Stop stop) {
+        Line = line;
+        Stop = stop;
+    }
 }

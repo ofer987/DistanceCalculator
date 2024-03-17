@@ -1,9 +1,9 @@
 import { TimeTableModel } from './timeTable';
 
 class TripModel {
-  id: number;
+	id: number;
 	name: string;
-	schedule: TimeTableModel;
+	schedule: TimeTableModel = new TimeTableModel();
 
 	get isAvailable(): boolean {
 		return this.schedule.isAvailable;
@@ -16,10 +16,13 @@ class TripModel {
 		// return true;
 	}
 
-	constructor(id: number, name: string, schedule: string[]) {
-    this.id = id;
+	constructor(id: number, name: string, arrivals?: string[]) {
+		this.id = id;
 		this.name = name;
-		this.schedule = new TimeTableModel(schedule);
+
+		if (arrivals) {
+			this.schedule.arrivals = arrivals;
+		}
 	}
 }
 
