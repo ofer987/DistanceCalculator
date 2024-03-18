@@ -15,11 +15,11 @@ public class Line
     [JsonPropertyName("id")]
     public required int Id { get; init; }
 
-    [JsonPropertyName("name")]
-    public required string Name { get; init; }
-
-    [JsonPropertyName("fullName")]
-    public string FullName => $"{Id} - {Name}";
+    // [JsonPropertyName("name")]
+    // public required string Name { get; init; }
+    //
+    // [JsonPropertyName("fullName")]
+    // public string FullName => $"{Id} - {Name}";
 
     [JsonIgnore]
     public IList<Stop> Stops { get; } = new List<Stop>();

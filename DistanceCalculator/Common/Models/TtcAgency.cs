@@ -28,7 +28,7 @@ public class TtcAgency : Agency
                 routeIds.Add(id);
             }
         }
-        foreach (var id in routeIds)
+        foreach (var id in routeIds.Take(10))
         {
             TtcModels.Route route;
             try

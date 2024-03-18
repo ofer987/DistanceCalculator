@@ -8,13 +8,13 @@ namespace DistanceCalculator.Common.Models;
 public class Stop
 {
     [JsonPropertyName("trip")]
-    public IList<Trip> Trips { get; init; } = new List<Trip>();
+    public IList<Destination> Destinations { get; init; } = new List<Destination>();
 
-    [JsonPropertyName("line")]
-    public required Line Line { get; init; }
-
-    [JsonPropertyName("lineId")]
-    public int LineId => Line.Id;
+    // [JsonPropertyName("line")]
+    // public required Line Line { get; init; }
+    //
+    // [JsonPropertyName("lineId")]
+    // public int LineId => Line.Id;
 
     [JsonPropertyName("id")]
     public required int Id { get; init; }

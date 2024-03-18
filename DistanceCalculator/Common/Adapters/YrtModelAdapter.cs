@@ -53,7 +53,6 @@ public class YrtModelAdapter
 
                 var stop = new Models.Stop
                 {
-                    Line = line,
                     Name = trip.TripShortName,
                     Id = stopTime.StopId,
                     Latitude = yrtStop.Latitude,

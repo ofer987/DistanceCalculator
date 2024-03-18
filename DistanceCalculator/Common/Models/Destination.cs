@@ -4,7 +4,7 @@ namespace DistanceCalculator.Common.Models;
 
 // public enum LineTypes { Subway = 0, Bus, Streetcar };
 
-public class Trip
+public class Destination
 {
     // [JsonPropertyName("type")]
     // public LineTypes Type { get; init; } = LineTypes.Bus;
@@ -12,29 +12,18 @@ public class Trip
     // [JsonPropertyName("agencyName")]
     // public required string Agency { get; init; }
 
-    [JsonPropertyName("id")]
-    public required int Id { get; init; }
-
-    [JsonPropertyName("trip_headsign")]
+    // [JsonPropertyName("id")]
+    // public required int Id { get; init; }
+    //
+    [JsonPropertyName("name")]
     public required string Name { get; init; }
 
-    [JsonPropertyName("route_id")]
-    public int LineId => Line.Id;
+    [JsonPropertyName("line_id")]
+    public int LineId { get; init; }
 
     [JsonPropertyName("stop_id")]
-    public int StopId => Stop.Id;
-
-    [JsonIgnore]
-    public Line Line { get; private set; }
-
-    [JsonIgnore]
-    public Stop Stop { get; private set; }
+    public int StopId { get; init; }
 
     [JsonPropertyName("schedule")]
     public IList<Time> Schedule { get; init; } = new List<Time>();
-
-    public Trip(Line line, Stop stop) {
-        Line = line;
-        Stop = stop;
-    }
 }

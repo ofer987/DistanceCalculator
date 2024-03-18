@@ -16,12 +16,20 @@ public abstract class Agency
     {
         Console.WriteLine("in here");
         Console.WriteLine($"There are {Lines.ToList().Count}");
-        return Lines.SelectMany(line => line.Stops)
+
+        var stops = Lines.SelectMany(line => line.Stops)
             .Select(stop => new { Distance = stop.GetDistance(latitude, longitude), Stop = stop })
             .Where(record => record.Distance <= 500d)
             .OrderBy(record => record.Distance)
             .Select(record => record.Stop)
-            .GroupBy(stop => stop.Line.FullName)
-            .Select(stop => stop.First());
+            .DistinctBy(stop => stop.Id);
+
+            // .Select(stop => stop.First());
+
+        var lines = stops
+            .SelectMany(stop => stop.Destinations)
+            .Select(destination => destination.Line);
+
+        return stops;
     }
 }
