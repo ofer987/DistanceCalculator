@@ -46,18 +46,22 @@ public class TtcModelAdapter : ModelAdapter
                 continue;
             }
 
+            var stopDictionary = new Dictionary<int, bool>();
             foreach (var stop in branch.Stops)
             {
-                var station = new Models.Stop
+                if (!stopDictionary.TryGetValue(stop.Id, out var _exists))
                 {
-                    Line = line,
-                    Id = stop.Id,
-                    Name = stop.Name,
-                    Latitude = stop.Latitude,
-                    Longitude = stop.Longitude
-                };
-
-                line.Stops.Add(station);
+                    var station = new Models.Stop
+                    {
+                        Line = line,
+                        Id = stop.Id,
+                        Name = stop.Name,
+                        Latitude = stop.Latitude,
+                        Longitude = stop.Longitude
+                    };
+                    stopDictionary.Add(stop.Id, true);
+                    line.Stops.Add(station);
+                }
             }
 
             yield return line;
