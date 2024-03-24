@@ -1,8 +1,25 @@
 import { PUBLIC_API_ORIGIN } from '$env/static/public';
+
 import { LineModel } from './line';
 import { DirectionModel } from './direction';
 import { StopModel } from './stop';
 import { TimeModel } from './schedule';
+
+class Platforms {
+	private values: Record<string, boolean> = {};
+
+	exists(lineId: number, stopCode: number): boolean {
+		const key = `lineId: ${lineId}, stopCode: ${stopCode}`;
+
+		return typeof this.values[key] != 'undefined';
+	}
+
+	push(lineId: number, stopCode: number): void {
+		const key = `lineId: ${lineId}, stopCode: ${stopCode}`;
+
+		this.values[key] = true;
+	}
+}
 
 interface Schedule {
 	id: number;
@@ -67,7 +84,7 @@ const getLines = async (latitude: number, longitude: number): Promise<LineModel[
 
 		console.log(`Stop Id: ${item.id}`);
 		let line: LineModel;
-		if (typeof linesHash[item.line.id] !== 'undefined') {
+		if (typeof linesHash[item.line.id] != 'undefined') {
 			console.log('found');
 			line = linesHash[item.line.id];
 		} else {
@@ -103,26 +120,46 @@ const getTimeTable = async (latitude: number, longitude: number): Promise<LineMo
 	const lines = await getLines(latitude, longitude);
 
 	const now = TimeModel.now();
+	const platforms = new Platforms();
 	for (const line of lines) {
 		const schedules = await getSchedules(line.id);
 
-		for (const direction of line.directions) {
-			for (const stop of direction.stops) {
-				const schedule = getSchedule(schedules, stop.id);
-				let timeTable;
+		switch (line.lineType) {
+			case 'Subway':
+				for (const direction of line.directions) {
+					for (const stop of direction.stops) {
+						const schedule = getSchedule(schedules, stop.id);
 
-				switch (line.lineType) {
-					case 'Subway':
 						stop.timetable = getArrivals(now, schedule.routeStopTimes);
-
-						break;
-					case 'Bus':
-					case 'Streetcar':
-					default:
-						timeTable = await getNextTimeTable(line.id, schedule.code);
-						stop.timetable = timeTable.map((item) => item.nextBusMinutes);
+					}
 				}
-			}
+				break;
+			case 'Bus':
+			case 'Streetcar':
+			default:
+				for (const direction of line.directions) {
+					for (const stop of direction.stops) {
+						const stopCode = getSchedule(schedules, stop.id).code;
+
+						// Value has already been processed
+						if (platforms.exists(line.id, stopCode)) {
+							console.log(`Code already exists for line ${line.id} with stopCode ${stopCode}`);
+							continue;
+						}
+						platforms.push(line.id, stopCode);
+
+						const timeTable = await getNextTimeTable(line.id, stopCode);
+						const arrivalTimes = timeTable.map((item) => item.nextBusMinutes);
+
+						if (arrivalTimes.length == 0) {
+							continue;
+						}
+
+						stop.timetable = arrivalTimes;
+						console.log(`Arrival times for ${line.id} with stopCode ${stopCode}`);
+					}
+				}
+				break;
 		}
 	}
 

@@ -4,7 +4,7 @@
 	console.log(`there are ${time.length} objects`);
 </script>
 
-<div class="arrivals" class:is-displayed={time.length > 0}>
+<div class="arrivals" class:disabled={time.length == 0}>
 	<h3>Schedule</h3>
 
 	{#each time as item}
@@ -14,10 +14,10 @@
 
 <style lang="scss">
 	.arrivals {
-		display: none;
+		display: block;
 
-		&.is-displayed {
-			display: block;
+		&.disabled {
+			display: none;
 		}
 	}
 </style>

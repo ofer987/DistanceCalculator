@@ -16,6 +16,10 @@
 <style lang="scss">
 	.line {
 		display: flex;
-    flex-direction: column;
+		flex-direction: column;
+
+		&.disabled {
+			display: none;
+		}
 	}
 </style>

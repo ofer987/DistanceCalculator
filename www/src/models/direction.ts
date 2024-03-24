@@ -6,12 +6,12 @@ class DirectionModel {
 
 	get isAvailable(): boolean {
 		for (const stop of this.stops) {
-			if (!stop.isAvailable) {
-				return false;
+			if (stop.isAvailable) {
+				return true;
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	constructor(name: string) {

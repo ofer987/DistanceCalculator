@@ -6,16 +6,16 @@ class LineModel {
 	type: number;
 	agencyName: string;
 	id: number;
-  directions: DirectionModel[] = [];
+	directions: DirectionModel[] = [];
 
 	get isAvailable(): boolean {
 		for (const direction of this.directions) {
-			if (!direction.isAvailable) {
-				return false;
+			if (direction.isAvailable) {
+				return true;
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	get lineType(): LineTypes {
