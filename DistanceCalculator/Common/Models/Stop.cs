@@ -7,6 +7,9 @@ namespace DistanceCalculator.Common.Models;
 
 public class Stop
 {
+    [JsonIgnore]
+    public double MaxDistance { get; init; } = 500d;
+
     [JsonPropertyName("trip")]
     public IList<Destination> Destinations { get; init; } = new List<Destination>();
 

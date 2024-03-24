@@ -44,32 +44,23 @@ public class TtcModelAdapter : ModelAdapter
         // var stops = new List<Models.Stop>();
         foreach (var branch in route.Branches)
         {
-            Models.Destination? destination = null;
-            foreach (var stop in branch.Stops.Take(1))
+            var destinationName = string.Empty;
+            switch (line.Type)
             {
-                string destinationName = string.Empty;
-                switch (line.Type)
-                {
-                    case Models.LineTypes.Subway:
-                        destinationName = branch.Direction.BranchName;
-                        break;
-                    case Models.LineTypes.Streetcar:
-                    case Models.LineTypes.Bus:
-                    default:
-                        destinationName = branch.Direction.HeadSign;
-                        break;
-                }
-
-                destination = new Models.Destination
-                {
-                    Name = destinationName
-                };
+                case Models.LineTypes.Subway:
+                    destinationName = branch.Direction.BranchName;
+                    break;
+                case Models.LineTypes.Streetcar:
+                case Models.LineTypes.Bus:
+                default:
+                    destinationName = branch.Direction.HeadSign;
+                    break;
             }
 
-            if (destination is null)
+            var destination = new Models.Destination
             {
-                continue;
-            }
+                Name = destinationName
+            };
 
             foreach (var stop in branch.Stops)
             {
@@ -78,7 +69,7 @@ public class TtcModelAdapter : ModelAdapter
                     Id = stop.Id,
                     Name = stop.Name,
                     Latitude = stop.Latitude,
-                    Longitude = stop.Longitude
+                    Longitude = stop.Longitude,
                 };
                 stopModel.Destinations.Add(destination);
 

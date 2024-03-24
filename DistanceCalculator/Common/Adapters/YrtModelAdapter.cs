@@ -38,7 +38,7 @@ public class YrtModelAdapter
             {
                 Id = route.Id,
                 Agency = "YRT / VIVA",
-                Name = route.GetName()
+                // Name = route.GetName()
             };
 
             var stopTimes = StopTimes.Where(stopTime => stopTime.TripId == trip.TripId
